@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>USTA League Manager</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <header>
+    <h1>USTA League Manager</h1>
+    <nav>
+      <button class="nav-btn active" data-section="teams">Teams</button>
+      <button class="nav-btn" data-section="matches">Matches</button>
+      <button class="nav-btn" data-section="standings">Standings</button>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- Teams Section -->
+    <section id="teams" class="section active">
+      <div class="section-header">
+        <h2>Teams</h2>
+        <button id="add-team-btn" class="btn-primary">+ Add Team</button>
+      </div>
+      <div id="team-form" class="form-card hidden">
+        <h3>New Team</h3>
+        <label>Team Name
+          <input type="text" id="team-name" placeholder="e.g. Forest Hills 4.0" />
+        </label>
+        <label>Captain
+          <input type="text" id="team-captain" placeholder="Captain's name" />
+        </label>
+        <label>NTRP Level
+          <select id="team-level">
+            <option value="">Select level</option>
+            <option>2.5</option>
+            <option>3.0</option>
+            <option>3.5</option>
+            <option>4.0</option>
+            <option>4.5</option>
+            <option>5.0</option>
+          </select>
+        </label>
+        <div class="form-actions">
+          <button id="save-team-btn" class="btn-primary">Save</button>
+          <button id="cancel-team-btn" class="btn-secondary">Cancel</button>
+        </div>
+      </div>
+      <ul id="team-list" class="card-list"></ul>
+    </section>
+
+    <!-- Matches Section -->
+    <section id="matches" class="section">
+      <div class="section-header">
+        <h2>Matches</h2>
+        <button id="add-match-btn" class="btn-primary">+ Add Match</button>
+      </div>
+      <div id="match-form" class="form-card hidden">
+        <h3>New Match</h3>
+        <label>Home Team
+          <select id="match-home"></select>
+        </label>
+        <label>Away Team
+          <select id="match-away"></select>
+        </label>
+        <label>Date
+          <input type="date" id="match-date" />
+        </label>
+        <label>Location
+          <input type="text" id="match-location" placeholder="e.g. Riverside Tennis Club" />
+        </label>
+        <div class="form-actions">
+          <button id="save-match-btn" class="btn-primary">Save</button>
+          <button id="cancel-match-btn" class="btn-secondary">Cancel</button>
+        </div>
+      </div>
+      <ul id="match-list" class="card-list"></ul>
+    </section>
+
+    <!-- Standings Section -->
+    <section id="standings" class="section">
+      <div class="section-header">
+        <h2>Standings</h2>
+      </div>
+      <table id="standings-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Team</th>
+            <th>W</th>
+            <th>L</th>
+            <th>Sets W</th>
+            <th>Sets L</th>
+          </tr>
+        </thead>
+        <tbody id="standings-body"></tbody>
+      </table>
+    </section>
+
+  </main>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
