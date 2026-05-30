@@ -1,0 +1,47 @@
+{
+  "expo": {
+    "name": "Rally",
+    "slug": "rally",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "rally",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#0B0B0F"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.rally.app",
+      "infoPlist": {
+        "NSContactsUsageDescription": "Rally usa tus contactos para invitar amigos a tus partidos."
+      }
+    },
+    "android": {
+      "package": "com.rally.app",
+      "permissions": ["READ_CONTACTS"]
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      [
+        "expo-contacts",
+        {
+          "contactsPermission": "Rally usa tus contactos para invitar amigos a tus partidos."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "supabaseUrl": "",
+      "supabaseAnonKey": ""
+    }
+  }
+}
