@@ -22,9 +22,11 @@
 - Invitar contactos no usuarios por SMS/deeplink.
 - Aceptar/rechazar invitaciones; notificaciones push (`expo-notifications`).
 
-## Fase 4 — Costos de la cancha (solo registro)
+## Fase 4 — Costos de la cancha (Stripe Connect)
 - Definir costo total y dividir (igual / personalizado).
-- Ver "quién debe qué"; marcar como saldado.
+- Edge Function de Supabase que crea PaymentIntents con la secret key de Stripe.
+- Pago con tarjeta desde la app (`@stripe/stripe-react-native`).
+- Webhook de Stripe → actualiza `cost_shares.status` (`pending`/`processing`/`settled`).
 - Resumen de balances por persona.
 
 ## Fase 5 — Scores

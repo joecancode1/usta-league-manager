@@ -67,8 +67,11 @@ añadir deportes sin tocar la app.
    leen con `expo-contacts`; si el contacto no es usuario se genera un invite por
    SMS/deeplink (futuro). Usuarios existentes reciben invite in-app.
 5. **Dividir costos de la cancha** — `game_costs` (costo total) + `cost_shares`
-   (parte de cada jugador, estado `pending`/`settled`). **Modo solo registro:** no
-   se mueve dinero real; la app calcula el reparto y marca pagos como saldados.
+   (parte de cada jugador). **Stripe Connect:** el organizador define el costo, la
+   app reparte y cada jugador paga su parte con tarjeta. Los `PaymentIntent` se crean
+   desde una **Supabase Edge Function** (la clave secreta de Stripe nunca toca el
+   cliente); el estado del pago se refleja en `cost_shares.status`
+   (`pending`/`processing`/`settled`) vía webhook de Stripe.
 6. **Scores** — `scores` por juego/set; al cerrar el juego se determina ganador y
    se actualizan stats.
 7. **Achievements** — `achievements` (catálogo) + `user_achievements` (desbloqueos).

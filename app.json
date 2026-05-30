@@ -30,6 +30,13 @@
       "expo-router",
       "expo-secure-store",
       [
+        "@stripe/stripe-react-native",
+        {
+          "merchantIdentifier": "merchant.com.rally.app",
+          "enableGooglePay": true
+        }
+      ],
+      [
         "expo-contacts",
         {
           "contactsPermission": "Rally usa tus contactos para invitar amigos a tus partidos."

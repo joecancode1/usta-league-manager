@@ -106,11 +106,12 @@ La parte que le toca a cada jugador.
 
 | Columna     | Tipo  | Notas                                  |
 |-------------|-------|----------------------------------------|
-| game_id     | uuid  | FK game_costs                          |
-| player_id   | uuid  | FK profiles                            |
-| amount_cents| int   | lo que debe                            |
-| status      | text  | `pending` / `settled` (modo registro)  |
-| PK          |       | (game_id, player_id)                   |
+| game_id                  | uuid  | FK game_costs                                 |
+| player_id                | uuid  | FK profiles                                   |
+| amount_cents             | int   | lo que debe                                   |
+| status                   | text  | `pending` / `processing` / `settled` (Stripe) |
+| stripe_payment_intent_id | text  | id del PaymentIntent (null hasta cobrar)      |
+| PK                       |       | (game_id, player_id)                          |
 
 ### `scores`
 Resultado por set/parcial.
@@ -150,6 +151,7 @@ Logros desbloqueados por usuario.
 - `profiles`: lectura pública; escritura solo del dueño.
 - `games` / relacionadas: visibles para organizador + participantes + invitados;
   los juegos `public` son legibles por todos.
-- `cost_shares`: cada quien ve su parte; el organizador ve todas las del juego.
+- `cost_shares`: cada quien ve su parte; el organizador ve todas las del juego. El
+  estado de pago lo actualiza el webhook de Stripe (service role), no los jugadores.
 - `user_achievements`: legibles por todos (para mostrar en perfil); escritura solo
   vía funciones del servidor (triggers `security definer`).

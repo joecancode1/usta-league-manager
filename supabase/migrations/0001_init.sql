@@ -110,7 +110,9 @@ create table if not exists public.game_invites (
 create index if not exists game_invites_invitee_idx on public.game_invites (invitee_id);
 
 -- ---------------------------------------------------------------------------
--- Costos de la cancha (modo "solo registro")
+-- Costos de la cancha (pagos vía Stripe Connect)
+-- El cobro/actualización de `status` y `stripe_payment_intent_id` se hace desde
+-- una Edge Function + webhook de Stripe (service role), no desde el cliente.
 -- ---------------------------------------------------------------------------
 create table if not exists public.game_costs (
   game_id     uuid primary key references public.games (id) on delete cascade,
@@ -120,10 +122,12 @@ create table if not exists public.game_costs (
 );
 
 create table if not exists public.cost_shares (
-  game_id      uuid not null references public.game_costs (game_id) on delete cascade,
-  player_id    uuid not null references public.profiles (id) on delete cascade,
-  amount_cents int  not null check (amount_cents >= 0),
-  status       text not null default 'pending' check (status in ('pending','settled')),
+  game_id                  uuid not null references public.game_costs (game_id) on delete cascade,
+  player_id                uuid not null references public.profiles (id) on delete cascade,
+  amount_cents             int  not null check (amount_cents >= 0),
+  status                   text not null default 'pending'
+                             check (status in ('pending','processing','settled')),
+  stripe_payment_intent_id text,
   primary key (game_id, player_id)
 );
 
@@ -279,13 +283,13 @@ drop policy if exists cost_shares_read on public.cost_shares;
 create policy cost_shares_read on public.cost_shares for select
   using (public.is_game_participant(game_id));
 
--- Cada jugador puede marcar su parte como saldada; el organizador gestiona todo
+-- El organizador puede ajustar los montos; el ESTADO de pago (status,
+-- stripe_payment_intent_id) lo actualiza el webhook de Stripe con service role,
+-- que ignora RLS. Los jugadores no marcan su parte como saldada a mano.
 drop policy if exists cost_shares_update on public.cost_shares;
 create policy cost_shares_update on public.cost_shares for update
-  using (player_id = auth.uid()
-         or exists (select 1 from public.games g where g.id = game_id and g.organizer_id = auth.uid()))
-  with check (player_id = auth.uid()
-         or exists (select 1 from public.games g where g.id = game_id and g.organizer_id = auth.uid()));
+  using (exists (select 1 from public.games g where g.id = game_id and g.organizer_id = auth.uid()))
+  with check (exists (select 1 from public.games g where g.id = game_id and g.organizer_id = auth.uid()));
 
 drop policy if exists cost_shares_insert on public.cost_shares;
 create policy cost_shares_insert on public.cost_shares for insert
